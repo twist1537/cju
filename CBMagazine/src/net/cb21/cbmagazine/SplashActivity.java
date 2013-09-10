@@ -13,31 +13,29 @@ public class SplashActivity extends Activity {
 	private static final int DELAY_TIME = 2000;
 
 	private int splashCount;
-	private ImageView ivKakao;
+	private ImageView imgView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.splash_activity);
+		setContentView(R.layout.activity_splash);
 
-//		ivKakao = (ImageView) findViewById(R.id.splash_activity_iv_kakao);
+		imgView = (ImageView) findViewById(R.id.imgview_splash);
 		
 		splashCount = 0;
 
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-
 				if (splashCount == 0) {
 					splashCount++;
-					ivKakao.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out));
-					ivKakao.setVisibility(View.INVISIBLE);
+					imgView.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out));
+					imgView.setVisibility(View.INVISIBLE);
 					new Handler().postDelayed(this, DELAY_TIME);
 					return;
 				}
 				
 				startActivity(new Intent(SplashActivity.this, MainActivity.class));
-				
 				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 				finish();
 
