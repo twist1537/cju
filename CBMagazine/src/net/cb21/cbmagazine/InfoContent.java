@@ -1,12 +1,9 @@
 package net.cb21.cbmagazine;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -154,7 +151,7 @@ public class InfoContent {
 	 * @param key : 광고지 정보 페이지 접근을 위한 키
 	 * @return mContent : 정보를 저장한 후의 InfoContent 객체
 	 */
-	public static synchronized InfoContent getContentFromKey(int key) {
+	public static InfoContent getContentFromKey(int key) {
 		// 저장할 컨텐츠 생성
 		InfoContent mContent = new InfoContent();
 		mContent.setKey(key);
@@ -163,7 +160,16 @@ public class InfoContent {
 
 		AsyncTask<Void, Void, Boolean> contentCreator = mContent.new ContentCreator();
 		contentCreator.execute();
-		return mContent;
+		
+		try {
+			if (contentCreator.get(100, TimeUnit.SECONDS)) // 컨텐츠 작성 완료 대기 Timeout 100초
+				return mContent; // 작성 완료시 컨텐츠 리턴
+		} catch (Exception e) {
+			Log.e("contentCreator.get", "ERROR : " + e.getMessage());
+			return null; // 예외 발생시 null 리턴
+		} // try get content
+		
+		return null; // 컨텐ㅊ
 	} // getContentFromWeb(int key)
 
 	/**
