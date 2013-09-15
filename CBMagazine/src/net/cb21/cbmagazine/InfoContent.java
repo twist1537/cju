@@ -5,6 +5,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -20,7 +23,7 @@ public class InfoContent {
 	private String			address;
 	private String			phoneNum;
 	private String			summary;
-	private String			imgSrc;
+	private Bitmap			imgSrc;
 
 	public static String	BASE_URL	= "http://m.chungbuknadri.net";
 	public static String	CONTENT_URL	= BASE_URL
@@ -71,9 +74,9 @@ public class InfoContent {
 	} // getSummary()
 
 	/**
-	 * @return imgSrc : 이미지 경로
+	 * @return imgSrc : 이미지 소스
 	 */
-	public String getImgSrc() {
+	public Bitmap getImgSrc() {
 		return imgSrc;
 	} // getImgSrc()
 
@@ -114,9 +117,9 @@ public class InfoContent {
 	} // setSummary(String summary)
 
 	/**
-	 * @param imgSrc : 이미지 경로
+	 * @param imgSrc : 이미지 소스
 	 */
-	public void setImgSrc(String imgSrc) {
+	public void setImgSrc(Bitmap imgSrc) {
 		this.imgSrc = imgSrc;
 	} // setImgSrc(String imgSrc)
 
@@ -138,7 +141,7 @@ public class InfoContent {
 			result = false;
 		if (getSummary() == null || getSummary().trim().length() == 0)
 			result = false;
-		if (getImgSrc() == null || getImgSrc().trim().length() == 0)
+		if (getImgSrc() == null)
 			result = false;
 
 		return result;
@@ -301,8 +304,10 @@ public class InfoContent {
 					String src = line.split(" ")[2]; // src 속성정보
 					src = src.replace("src=", ""); // 경로값 이외 정보 제거
 					src = src.replace("\"", ""); // 경로값 이외 정보 제거
-					String imgSrc = BASE_URL + src; // 부분 경로 -> 전체 경로
-					setImgSrc(imgSrc); // 경로값 저장
+					String srcPath = BASE_URL + src; // 부분 경로 -> 전체 경로
+					
+					URL srcUrl = new URL(srcPath);
+					setImgSrc(BitmapFactory.decodeStream(srcUrl.openStream()));
 					break; // 이미지는 하나만 저장하고 종료
 				} // catch tag!
 			} // while page not end
